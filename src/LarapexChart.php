@@ -33,6 +33,7 @@ class LarapexChart
     protected $toolbar;
     protected $zoom;
     protected $dataLabels;
+    protected $plotOptions;
     private $chartLetters = 'abcdefghijklmnopqrstuvwxyz';
 
     /*
@@ -235,9 +236,19 @@ class LarapexChart
         return $this;
     }
 
-    public function setDataLabels(bool $enabled = true) :LarapexChart
+    public function setDataLabels(bool $enabled = true, ?string $json = null) :LarapexChart
     {
-        $this->dataLabels = json_encode(['enabled' => $enabled]);
+        if(!is_null($json)){
+            $this->dataLabels = $json;
+        }else {
+            $this->dataLabels = json_encode(['enabled' => $enabled]);
+        }
+        return $this;
+    }
+
+    public function setPlotOptions(string $plotOptions): LarapexChart
+    {
+        $this->plotOptions = $plotOptions;
         return $this;
     }
 
@@ -398,7 +409,7 @@ class LarapexChart
     }
 
     /**
-     * @return true|boolean
+     * @return boolean
      */
     public function toolbar()
     {
@@ -406,7 +417,7 @@ class LarapexChart
     }
 
     /**
-     * @return true|boolean
+     * @return boolean
      */
     public function zoom()
     {
@@ -414,11 +425,19 @@ class LarapexChart
     }
 
     /**
-     * @return true|boolean
+     * @return boolean|string
      */
     public function dataLabels()
     {
         return $this->dataLabels;
+    }
+
+    /**
+     * @return string
+     */
+    public function plotOptions()
+    {
+        return $this->plotOptions;
     }
 
     /*
@@ -438,11 +457,14 @@ class LarapexChart
                 'zoom' => json_decode($this->zoom()),
             ],
             'plotOptions' => [
-                'bar' => json_decode($this->horizontal()),
+                $this->type() => [
+                    'horizontal'=> json_decode($this->horizontal()),
+                    'dataLabels'=> json_decode($this->dataLabels()),
+                    json_decode($this->plotOptions())
+                ]
             ],
             'colors' => json_decode($this->colors()),
             'series' => json_decode($this->dataset()),
-            'dataLabels' => json_decode($this->dataLabels()),
             'title' => [
                 'text' => $this->title()
             ],
@@ -480,10 +502,13 @@ class LarapexChart
                 'zoom' => json_decode($this->zoom()),
             ],
             'plotOptions' => [
-                'bar' => json_decode($this->horizontal()),
+                $this->type() => [
+                    'horizontal'=> json_decode($this->horizontal()),
+                    'dataLabels'=> json_decode($this->dataLabels()),
+                    json_decode($this->plotOptions())
+                ]
             ],
             'colors' => json_decode($this->colors()),
-            'dataLabels' => json_decode($this->dataLabels()),
             'title' => [
                 'text' => $this->title()
             ],
