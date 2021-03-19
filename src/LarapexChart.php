@@ -4,9 +4,6 @@ use Illuminate\Support\Facades\View;
 
 class LarapexChart
 {
-
-    const DEFAULT_WIDTH = 600;
-
     /*
     |--------------------------------------------------------------------------
     | Chart
@@ -36,6 +33,7 @@ class LarapexChart
     protected $toolbar;
     protected $zoom;
     protected $dataLabels;
+    protected $plotOptions;
     private $chartLetters = 'abcdefghijklmnopqrstuvwxyz';
 
     /*
@@ -171,7 +169,6 @@ class LarapexChart
 
     public function setLabels(array $labels) :LarapexChart
     {
-//        $this->labels = $this->transformLabels($labels);
         $this->labels = $labels;
         return $this;
     }
@@ -239,9 +236,19 @@ class LarapexChart
         return $this;
     }
 
-    public function setDataLabels(bool $enabled) :LarapexChart
+    public function setDataLabels(bool $enabled = true, ?string $json = null) :LarapexChart
     {
-        $this->dataLabels = json_encode(['enabled' => $enabled]);
+        if(!is_null($json)){
+            $this->dataLabels = $json;
+        }else {
+            $this->dataLabels = json_encode(['enabled' => $enabled]);
+        }
+        return $this;
+    }
+
+    public function setPlotOptions(string $plotOptions): LarapexChart
+    {
+        $this->plotOptions = $plotOptions;
         return $this;
     }
 
@@ -343,19 +350,14 @@ class LarapexChart
     /**
      * @return int
      */
-    public function height()
+    public function height() :int
     {
         return $this->height;
     }
 
-    public function widthForBladeViews() :string
+    public function width() :string
     {
         return $this->width ? $this->width : '100%';
-    }
-
-    public function widthForJsonOutput() :int
-    {
-        return $this->width ? $this->width : self::DEFAULT_WIDTH;
     }
 
     /**
@@ -407,7 +409,7 @@ class LarapexChart
     }
 
     /**
-     * @return true|boolean
+     * @return boolean
      */
     public function toolbar()
     {
@@ -415,7 +417,7 @@ class LarapexChart
     }
 
     /**
-     * @return true|boolean
+     * @return boolean
      */
     public function zoom()
     {
@@ -423,11 +425,19 @@ class LarapexChart
     }
 
     /**
-     * @return true|boolean
+     * @return boolean|string
      */
     public function dataLabels()
     {
         return $this->dataLabels;
+    }
+
+    /**
+     * @return string
+     */
+    public function plotOptions()
+    {
+        return $this->plotOptions;
     }
 
     /*
@@ -442,17 +452,19 @@ class LarapexChart
             'chart' => [
                 'type' => $this->type(),
                 'height' => $this->height(),
-                'width' => $this->widthForJsonOutput(),
+                'width' => $this->width(),
                 'toolbar' => json_decode($this->toolbar()),
                 'zoom' => json_decode($this->zoom()),
             ],
             'plotOptions' => [
-                'bar' => json_decode($this->horizontal()),
+                $this->type() => [
+                    'horizontal'=> json_decode($this->horizontal()),
+                    'dataLabels'=> json_decode($this->dataLabels()),
+                    json_decode($this->plotOptions())
+                ]
             ],
             'colors' => json_decode($this->colors()),
             'series' => json_decode($this->dataset()),
-            'dataLabels' => json_decode($this->dataLabels()),
-            'labels' => $this->labels(),
             'title' => [
                 'text' => $this->title()
             ],
@@ -466,6 +478,10 @@ class LarapexChart
             'grid' => json_decode($this->grid()),
             'markers' => json_decode($this->markers()),
         ];
+
+        if($this->labels()) {
+            $options['labels'] = $this->labels();
+        }
 
         if($this->stroke()) {
             $options['stroke'] = json_decode($this->stroke());
@@ -477,7 +493,7 @@ class LarapexChart
         ]);
     }
 
-    public function toInertia() :array
+    public function toVue() :array
     {
         $options = [
             'chart' => [
@@ -486,11 +502,13 @@ class LarapexChart
                 'zoom' => json_decode($this->zoom()),
             ],
             'plotOptions' => [
-                'bar' => json_decode($this->horizontal()),
+                $this->type() => [
+                    'horizontal'=> json_decode($this->horizontal()),
+                    'dataLabels'=> json_decode($this->dataLabels()),
+                    json_decode($this->plotOptions())
+                ]
             ],
             'colors' => json_decode($this->colors()),
-            'dataLabels' => json_decode($this->dataLabels()),
-            'labels' => $this->labels(),
             'title' => [
                 'text' => $this->title()
             ],
@@ -505,21 +523,21 @@ class LarapexChart
             'markers' => json_decode($this->markers()),
         ];
 
+        if($this->labels()) {
+            $options['labels'] = $this->labels();
+        }
+
         if($this->stroke()) {
             $options['stroke'] = json_decode($this->stroke());
         }
 
         return [
-            'width' => $this->widthForJsonOutput(),
+            'height' => $this->height(),
+            'width' => $this->width(),
             'type' => $this->type(),
             'options' => $options,
             'series' => json_decode($this->dataset()),
         ];
-    }
-
-    public function toVueApexCharts() :array
-    {
-        return $this->toInertia();
     }
 
 }
