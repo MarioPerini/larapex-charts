@@ -31,8 +31,10 @@ class LarapexChart
     protected $markers;
     protected $stroke;
     protected $toolbar;
+    protected $legend;
     protected $zoom;
     protected $dataLabels;
+    protected $plotOptions;
     private $chartLetters = 'abcdefghijklmnopqrstuvwxyz';
 
     /*
@@ -51,6 +53,7 @@ class LarapexChart
         $this->markers = json_encode(['show' => false]);
         $this->toolbar = json_encode(['show' => false]);
         $this->zoom = json_encode(['enabled' => true]);
+        $this->legend = json_encode(['show' => false]);
         $this->dataLabels = json_encode(['enabled' => false]);
         return $this;
     }
@@ -235,9 +238,25 @@ class LarapexChart
         return $this;
     }
 
-    public function setDataLabels(bool $enabled = true) :LarapexChart
+    public function setLegend(bool $show, string $position = 'right') :LarapexChart
     {
-        $this->dataLabels = json_encode(['enabled' => $enabled]);
+        $this->legend = json_encode(['show' => $show, 'position' => $position]);
+        return $this;
+    }
+
+    public function setDataLabels(bool $enabled = true, ?string $json = null) :LarapexChart
+    {
+        if(!is_null($json)){
+            $this->dataLabels = $json;
+        }else {
+            $this->dataLabels = json_encode(['enabled' => $enabled]);
+        }
+        return $this;
+    }
+
+    public function setPlotOptions(string $plotOptions): LarapexChart
+    {
+        $this->plotOptions = $plotOptions;
         return $this;
     }
 
@@ -398,15 +417,23 @@ class LarapexChart
     }
 
     /**
-     * @return true|boolean
+     * @return boolean
      */
     public function toolbar()
     {
         return $this->toolbar;
     }
+    
+    /**
+     * @return false|string
+     */
+    public function legend()
+    {
+        return $this->legend;
+    }
 
     /**
-     * @return true|boolean
+     * @return boolean
      */
     public function zoom()
     {
@@ -414,11 +441,19 @@ class LarapexChart
     }
 
     /**
-     * @return true|boolean
+     * @return boolean|string
      */
     public function dataLabels()
     {
         return $this->dataLabels;
+    }
+
+    /**
+     * @return string
+     */
+    public function plotOptions()
+    {
+        return $this->plotOptions;
     }
 
     /*
@@ -438,11 +473,14 @@ class LarapexChart
                 'zoom' => json_decode($this->zoom()),
             ],
             'plotOptions' => [
-                'bar' => json_decode($this->horizontal()),
+                $this->type() => [
+                    'horizontal'=> json_decode($this->horizontal()),
+                    'dataLabels'=> json_decode($this->dataLabels()),
+                    json_decode($this->plotOptions())
+                ]
             ],
             'colors' => json_decode($this->colors()),
             'series' => json_decode($this->dataset()),
-            'dataLabels' => json_decode($this->dataLabels()),
             'title' => [
                 'text' => $this->title()
             ],
@@ -455,6 +493,7 @@ class LarapexChart
             ],
             'grid' => json_decode($this->grid()),
             'markers' => json_decode($this->markers()),
+            'legend' => json_decode($this->legend()),
         ];
 
         if($this->labels()) {
@@ -480,10 +519,13 @@ class LarapexChart
                 'zoom' => json_decode($this->zoom()),
             ],
             'plotOptions' => [
-                'bar' => json_decode($this->horizontal()),
+                $this->type() => [
+                    'horizontal'=> json_decode($this->horizontal()),
+                    'dataLabels'=> json_decode($this->dataLabels()),
+                    json_decode($this->plotOptions())
+                ]
             ],
             'colors' => json_decode($this->colors()),
-            'dataLabels' => json_decode($this->dataLabels()),
             'title' => [
                 'text' => $this->title()
             ],
@@ -496,6 +538,7 @@ class LarapexChart
             ],
             'grid' => json_decode($this->grid()),
             'markers' => json_decode($this->markers()),
+            'legend' => json_decode($this->legend()),
         ];
 
         if($this->labels()) {

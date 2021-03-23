@@ -9,11 +9,14 @@
             zoom: {!! $chart->zoom() !!}
         },
         plotOptions: {
-            bar: {!! $chart->horizontal() !!}
+            {!! $chart->type() !!}:{
+                horizontal: {!! $chart->horizontal() !!},
+                dataLabels: {!! $chart->dataLabels() !!},
+                {!! $chart->plotOptions() !!}
+            },
         },
         colors: {!! $chart->colors() !!},
         series: {!! $chart->dataset() !!},
-        dataLabels: {!! $chart->dataLabels() !!},
         @if($chart->labels())
             labels: {!! json_encode($chart->labels(), true) !!},
         @endif
@@ -29,6 +32,7 @@
         },
         grid: {!! $chart->grid() !!},
         markers: {!! $chart->markers() !!},
+        legend: {!! $chart->legend() !!},
         @if($chart->stroke())
             stroke: {!! $chart->stroke() !!},
         @endif
