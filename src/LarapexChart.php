@@ -53,7 +53,7 @@ class LarapexChart
         $this->markers = json_encode(['show' => false]);
         $this->toolbar = json_encode(['show' => false]);
         $this->zoom = json_encode(['enabled' => true]);
-        $this->legend = json_encode(['show' => true]);
+        $this->legend = json_encode(['show' => false]);
         $this->dataLabels = json_encode(['enabled' => false]);
         return $this;
     }
