@@ -13,7 +13,7 @@
                 horizontal: {!! $chart->horizontal() !!},
                 dataLabels: {!! $chart->dataLabels() !!},
                 {!! $chart->plotOptions() !!}
-            }
+            },
         },
         colors: {!! $chart->colors() !!},
         series: {!! $chart->dataset() !!},
@@ -32,6 +32,7 @@
         },
         grid: {!! $chart->grid() !!},
         markers: {!! $chart->markers() !!},
+        legend: {!! $chart->legend() !!},
         @if($chart->stroke())
             stroke: {!! $chart->stroke() !!},
         @endif

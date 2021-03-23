@@ -31,6 +31,7 @@ class LarapexChart
     protected $markers;
     protected $stroke;
     protected $toolbar;
+    protected $legend;
     protected $zoom;
     protected $dataLabels;
     protected $plotOptions;
@@ -52,6 +53,7 @@ class LarapexChart
         $this->markers = json_encode(['show' => false]);
         $this->toolbar = json_encode(['show' => false]);
         $this->zoom = json_encode(['enabled' => true]);
+        $this->legend = json_encode(['show' => true]);
         $this->dataLabels = json_encode(['enabled' => false]);
         return $this;
     }
@@ -236,6 +238,12 @@ class LarapexChart
         return $this;
     }
 
+    public function setLegend(bool $show, string $position = 'right') :LarapexChart
+    {
+        $this->legend = json_encode(['show' => $show, 'position' => $position]);
+        return $this;
+    }
+
     public function setDataLabels(bool $enabled = true, ?string $json = null) :LarapexChart
     {
         if(!is_null($json)){
@@ -415,6 +423,14 @@ class LarapexChart
     {
         return $this->toolbar;
     }
+    
+    /**
+     * @return false|string
+     */
+    public function legend()
+    {
+        return $this->legend;
+    }
 
     /**
      * @return boolean
@@ -477,6 +493,7 @@ class LarapexChart
             ],
             'grid' => json_decode($this->grid()),
             'markers' => json_decode($this->markers()),
+            'legend' => json_decode($this->legend()),
         ];
 
         if($this->labels()) {
@@ -521,6 +538,7 @@ class LarapexChart
             ],
             'grid' => json_decode($this->grid()),
             'markers' => json_decode($this->markers()),
+            'legend' => json_decode($this->legend()),
         ];
 
         if($this->labels()) {
