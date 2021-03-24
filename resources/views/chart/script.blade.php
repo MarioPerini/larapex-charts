@@ -1,6 +1,9 @@
 <script>
     var options =
     {
+        theme:{
+          mode:{!! $chart->themeMode() !!}
+        },
         chart: {
             type: '{!! $chart->type() !!}',
             height: {!! $chart->height() !!},

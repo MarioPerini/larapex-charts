@@ -35,6 +35,7 @@ class LarapexChart
     protected $zoom;
     protected $dataLabels;
     protected $plotOptions;
+    protected $themeMode;
     private $chartLetters = 'abcdefghijklmnopqrstuvwxyz';
 
     /*
@@ -55,6 +56,8 @@ class LarapexChart
         $this->zoom = json_encode(['enabled' => true]);
         $this->legend = json_encode(['show' => true]);
         $this->dataLabels = json_encode(['enabled' => false]);
+        $this->themeMode = 'light';
+
         return $this;
     }
 
@@ -260,6 +263,12 @@ class LarapexChart
         return $this;
     }
 
+    public function setThemeMode(string $themeMode): LarapexChart
+    {
+        $this->themeMode = $themeMode;
+        return $this;
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Getters
@@ -456,6 +465,14 @@ class LarapexChart
         return $this->plotOptions;
     }
 
+    /**
+     * @return string
+     */
+    public function themeMode()
+    {
+        return $this->themeMode;
+    }
+
     /*
     |--------------------------------------------------------------------------
     | JSON Helper
@@ -465,6 +482,9 @@ class LarapexChart
     public function toJson()
     {
         $options = [
+            'theme' => [
+              'mode' => $this->themeMode()
+            ],
             'chart' => [
                 'type' => $this->type(),
                 'height' => $this->height(),
@@ -513,6 +533,9 @@ class LarapexChart
     public function toVue() :array
     {
         $options = [
+            'theme'=>[
+              'mode' => $this->themeMode()
+            ],
             'chart' => [
                 'height' => $this->height(),
                 'toolbar' => json_decode($this->toolbar()),
