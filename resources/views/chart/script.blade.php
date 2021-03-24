@@ -2,7 +2,7 @@
     var options =
     {
         theme:{
-          mode:{!! $chart->themeMode() !!}
+          mode:'{!! $chart->themeMode() !!}'
         },
         chart: {
             type: '{!! $chart->type() !!}',
