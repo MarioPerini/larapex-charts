@@ -1,5 +1,5 @@
 <script>
-    let switch_theme = 'light'
+    var switch_theme = 'light'
     if(localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)){
         switch_theme = 'dark'
     }
