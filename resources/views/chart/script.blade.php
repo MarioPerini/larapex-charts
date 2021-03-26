@@ -1,13 +1,13 @@
 <script>
-    let theme = 'light'
+    let switch_theme = 'light'
     if(localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)){
-        theme = 'dark'
+        switch_theme = 'dark'
     }
 
     var options =
     {
         theme:{
-          mode:theme,
+          mode:switch_theme,
         },
         chart: {
             type: '{!! $chart->type() !!}',
