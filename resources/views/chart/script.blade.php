@@ -38,6 +38,9 @@
         xaxis: {
             categories: {!! $chart->xAxis() !!}
         },
+        @if($chart->yAxis())
+            yaxis: {!! $chart->yAxis() !!},
+        @endif
         grid: {!! $chart->grid() !!},
         markers: {!! $chart->markers() !!},
         legend: {!! $chart->legend() !!},

@@ -9,9 +9,9 @@ class LarapexChart
     | Chart
     |--------------------------------------------------------------------------
     |
-    | This class build the chart by passing setters to the object, it will 
-    | use the method container and scripts to generate a JSON  
-    | in blade views, it works also with Vue JS components  
+    | This class build the chart by passing setters to the object, it will
+    | use the method container and scripts to generate a JSON
+    | in blade views, it works also with Vue JS components
     |
     */
 
@@ -27,6 +27,7 @@ class LarapexChart
     protected $colors;
     protected $horizontal;
     protected $xAxis;
+    protected $yAxis;
     protected $grid;
     protected $markers;
     protected $stroke;
@@ -181,6 +182,12 @@ class LarapexChart
     public function setXAxis(array $categories) :LarapexChart
     {
         $this->xAxis = json_encode($categories);
+        return $this;
+    }
+
+    public function setYAxis(array $options) :LarapexChart
+    {
+        $this->yAxis = json_encode($options);
         return $this;
     }
 
@@ -402,6 +409,14 @@ class LarapexChart
     }
 
     /**
+     * @return mixed
+     */
+    public function yAxis()
+    {
+        return $this->yAxis;
+    }
+
+    /**
      * @return false|string
      */
     public function grid()
@@ -432,7 +447,7 @@ class LarapexChart
     {
         return $this->toolbar;
     }
-    
+
     /**
      * @return false|string
      */
@@ -511,6 +526,7 @@ class LarapexChart
             'xaxis' => [
                 'categories' => json_decode($this->xAxis()),
             ],
+            'yaxis' =>  json_decode($this->yAxis()),
             'grid' => json_decode($this->grid()),
             'markers' => json_decode($this->markers()),
             'legend' => json_decode($this->legend()),
@@ -559,6 +575,7 @@ class LarapexChart
             'xaxis' => [
                 'categories' => json_decode($this->xAxis()),
             ],
+            'yaxis' =>  json_decode($this->yAxis()),
             'grid' => json_decode($this->grid()),
             'markers' => json_decode($this->markers()),
             'legend' => json_decode($this->legend()),
